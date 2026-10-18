@@ -74,6 +74,7 @@ async function init() {
     audio.unlock();
     music.start();
   };
+  unlockAudio();
   ['pointerdown', 'touchend', 'click', 'keydown'].forEach((type) => window.addEventListener(type, unlockAudio, true));
   document.addEventListener('click', (e) => {
     if (e.target.closest('.btn, .btn-round')) sfx.click();

@@ -26,7 +26,7 @@ class AudioEngine {
       this.applyLevels(true);
       this.readyListeners.forEach((fn) => fn());
     }
-    if (!this.paused && this.ctx.state === 'suspended') this.ctx.resume();
+    if (!this.paused && this.ctx.state !== 'running') this.ctx.resume().catch(() => {});
   }
 
   onReady(fn) {

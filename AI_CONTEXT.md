@@ -96,6 +96,7 @@ sun-and-moon/
 │       ├── engine.js       AudioEngine: context, master/music/sfx buses, tone(), noise(), YouTube mute
 │       ├── music.js        Generative MusicPlayer (6 songs, 4 sections, rotating, phrases composed live)
 │       └── sfx.js          Named sound effects (tap, place, wrong, line, hint, win, star, lose, click, reward)
+├── docs/screenshots/       README images only (NOT part of the game bundle). Retake them after visual changes
 └── tools/
     ├── test-generator.mjs  `npm test [stages] [salts]`: checks every stage is logic-solvable + unique, timing
     └── package.sh          `npm run package` → dist/sun-and-moon.zip (index.html, css, js, assets only)
@@ -146,7 +147,7 @@ sun-and-moon/
 - The SDK `<script src="https://www.youtube.com/game_api/v1">` is the **first script** in `index.html`.
 - `firstFrameReady()` is called while the loading screen shows, and `gameReady()` after the home screen is interactive.
 - Saves: **only** `ytgame.game.saveData` in Playables (localStorage only outside Playables). `loadData` is awaited before any save. Save size is tiny (well under 500 KiB).
-- Audio: follows `isAudioEnabled()` / `onAudioEnabledChange()` (master gain). There is **no global mute button** in-game, only separate Music / Sound-effect toggles. Audio starts only after a user gesture.
+- Audio: follows `isAudioEnabled()` / `onAudioEnabledChange()` (master gain). There is **no global mute button** in-game, only separate Music / Sound-effect toggles. The AudioContext is created at startup and music starts immediately when the browser allows it. Otherwise it starts on the first gesture (pointerdown, touchend, click or keydown listeners).
 - Pause: `onPause` → stop the timer, music scheduler, AudioContext, particles and CSS animations (`body.is-paused`), then save. `onResume` restores everything. **Never use the Page Visibility API.**
 - No external network calls (the SDK script is the only URL), no external links, no share buttons, no exit/quit button, no extra user agreements.
 - Responsive for every aspect ratio (portrait column layout; `min-aspect-ratio: 5/4` switches the game and home screens to a row layout, and the home dock gets a fixed 280 px width there). On small landscape screens (`min-aspect-ratio: 5/4` and `max-width: 1000px`) the home screen uses a 2-column grid (stage path on the left, title + Play on the right). The owner likes the current desktop layout, so don't restyle it unless asked.
@@ -165,6 +166,7 @@ sun-and-moon/
 - Scenario tests (game flows in jsdom with a fake `ytgame`): run `npm install` once (dev-only `jsdom`), then `npm run test:scenarios`. Each scenario in `tools/scenarios/scenarios.mjs` runs in its own Node process (`run-all.mjs`). They cover win, Esc→next stage, last cell then Home, zero-lives resume, stale timers, double win on pause/resume, pause during win delay, failed cloud load, corrupt/garbage saves, old saves without `locked`, smart hints, locked taps, keyboard, pause during a pending check, the signs tip, 8×8, the frozen timer and retry, rewarded ads (lives/hint/failure), rapid taps and settings. **Add a scenario for every bug you fix.**
 - Playables certification: use the [SDK test suite](https://developers.google.com/youtube/gaming/playables/test_suite) and upload `dist/sun-and-moon.zip` from `npm run package` in the Developer Portal.
 - GitHub Pages: push this folder as the repo root, then Settings → Pages → deploy from branch `main` / root.
+- **Live site:** https://robinkumar5986.github.io/Sun-Moon/ (repo `robinkumar5986/Sun-Moon`). Use this link for the YouTube Playables interest form and the SDK test suite.
 
 ## 10b. Robustness rules (from the v1.4 bug sweep)
 
@@ -203,6 +205,7 @@ sun-and-moon/
 
 ## 13. Change log
 
+- **v1.6.0**: Music starts as soon as the game loads (`unlockAudio()` runs in `init()`), unless the player turned Music off in Settings or YouTube audio is muted. If the browser blocks audio until the first interaction (browser autoplay rules), the AudioContext stays suspended and starts on the first tap, click or key press.
 - **v1.5.0**: The app version is shown in Settings (`js/core/version.js`). `npm test` checks it matches `package.json`.
 - **v1.4.0**: Bug sweep (see 10b): frozen won board on resume, a 0-lives soft-lock, stale timers after Home, double win on pause/resume, `save.current` not cleared after a win, cloud-load failure wiping progress, corrupt-save crash, hints wasted on correct cells, ad races, animation classes not cleaned up, music scheduling while muted. Added a jsdom scenario test suite (`tools/scenarios`) and removed dead code and CSS. Layout fixes found in the browser sweep: board overflow on 1:1/4:3/short landscape, home stage path overlapping on short screens, home actions off-screen on small landscape, bigger `=`/`×` clue badges on 8×8, smaller tutorial on short screens.
 - **v1.3.0**: Validation is now per completed row/column instead of per tap. Taps cycle empty/sun/moon freely, correct lines lock (mint), and a wrong line costs one life and clears its wrong cells. Save gains `locked`. The settle/preview tap mechanic was removed.
