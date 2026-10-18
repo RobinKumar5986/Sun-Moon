@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="description" content="Sun & Moon: a bright, relaxing logic puzzle. Fill the grid with suns and moons.">
+  <meta name="theme-color" content="#b45cf5">
+  <title>Sun &amp; Moon</title>
+  <script src="https://www.youtube.com/game_api/v1"></script>
+  <link rel="icon" href="assets/images/sun.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <div id="app">
+    <div class="sky" aria-hidden="true">
+      <span class="bubble"></span><span class="bubble"></span><span class="bubble"></span><span class="bubble"></span>
+      <span class="bubble"></span><span class="bubble"></span><span class="bubble"></span><span class="bubble"></span>
+    </div>
+
+    <section id="screen-loading" class="screen is-active">
+      <div class="logo">
+        <img class="logo-sun" src="assets/images/sun.svg" alt="">
+        <img class="logo-moon" src="assets/images/moon.svg" alt="">
+      </div>
+      <p class="loading-text">Loading…</p>
+    </section>
+
+    <section id="screen-home" class="screen">
+      <div class="home-top">
+        <div class="logo">
+          <img class="logo-sun" src="assets/images/sun.svg" alt="">
+          <img class="logo-moon" src="assets/images/moon.svg" alt="">
+        </div>
+        <h1 class="title">Sun <span>&amp;</span> Moon</h1>
+        <p class="tagline">A bright little logic puzzle</p>
+      </div>
+      <ol class="stage-path" id="stage-path"></ol>
+      <div class="home-actions">
+        <button class="btn btn-play" id="btn-play" type="button">
+          <svg class="icon" aria-hidden="true"><use href="assets/images/icons.svg#play"></use></svg>
+          <span id="play-label">Play</span>
+        </button>
+        <div class="home-row">
+          <button class="btn-round" id="btn-home-help" type="button" aria-label="How to play">
+            <svg class="icon" aria-hidden="true"><use href="assets/images/icons.svg#help"></use></svg>
+          </button>
+          <div class="star-total"><img src="assets/images/star.svg" alt="Stars"><span id="star-total">0</span></div>
+          <button class="btn-round" id="btn-home-settings" type="button" aria-label="Settings">
+            <svg class="icon" aria-hidden="true"><use href="assets/images/icons.svg#gear"></use></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-game" class="screen">
+      <header class="hud">
+        <div class="hud-stage">
+          <span class="stage-label" id="hud-stage">Stage 1</span>
+          <span class="tier-badge" id="hud-tier"></span>
+        </div>
+        <div class="hud-timer">
+          <svg class="icon" aria-hidden="true"><use href="assets/images/icons.svg#clock"></use></svg>
+          <span id="hud-timer">00:00</span>
+        </div>
+        <div class="hud-lives" id="hud-lives" aria-label="Lives"></div>
+      </header>
+
+      <div class="board-area" id="board-area">
+        <div class="board" id="board"></div>
+      </div>
+
+      <footer class="toolbar">
+        <button class="btn-round" id="btn-help" type="button" aria-label="How to play">
+          <svg class="icon" aria-hidden="true"><use href="assets/images/icons.svg#help"></use></svg>
+        </button>
+        <button class="btn-round btn-hint" id="btn-hint" type="button" aria-label="Hint">
+          <img src="assets/images/bulb.svg" alt="">
+          <span class="badge" id="hint-count">3</span>
+        </button>
+        <button class="btn-round" id="btn-settings" type="button" aria-label="Settings">
+          <svg class="icon" aria-hidden="true"><use href="assets/images/icons.svg#gear"></use></svg>
+        </button>
+      </footer>
+    </section>
+
+    <div id="modals"></div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <canvas id="fx" class="fx" aria-hidden="true"></canvas>
+  </div>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
